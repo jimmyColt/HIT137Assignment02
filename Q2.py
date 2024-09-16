@@ -1,32 +1,25 @@
-from PIL import Image
+import cv2
+import numpy as np
 import time
 
-# Generate the number
+# Step 1: Load the image from the given path using OpenCV
+img_path = r'C:\Users\JAMES\Documents\JAPA\CDU\HIT137\Assignment 2\chapter1.jpg'
+image = cv2.imread(img_path)
+
+# Step 2: Generate a number based on the current time
 current_time = int(time.time())
 generated_number = (current_time % 100) + 50
+
+# If the number is even, add 10 to it
 if generated_number % 2 == 0:
     generated_number += 10
-print("Generated Number:", generated_number)
 
-# Open the provided image
-image = Image.open("Chapter1.png")
-pixels = image.load()
+# Step 3: Add the generated number to each pixel's RGB values
+# Since OpenCV loads images in BGR format, we add the generated number to all three channels (B, G, R)
+modified_img = cv2.add(image, (generated_number, generated_number, generated_number, 0))
 
-# Modify the image by adding the generated number to each (r,g,b) value
-width, height = image.size
-for x in range(width):
-    for y in range(height):
-        r, g, b = pixels[x, y]
-        pixels[x, y] = (r + generated_number, g + generated_number, b + generated_number)
+# Step 4: Save the modified image
+output_path = r'C:\Users\JAMES\Documents\JAPA\CDU\HIT137\Assignment 2\chapter1out.png'
+cv2.imwrite(output_path, modified_img)
 
-# Save the new image as "chapter1out.png"
-image.save("chapter1out.png")
-
-# Sum all the red pixel values in the new image
-sum_of_red_pixels = 0
-for x in range(width):
-    for y in range(height):
-        r, g, b = pixels[x, y]
-        sum_of_red_pixels += r
-
-print("Sum of Red Pixels:", sum_of_red_pixels)
+print("Modified image saved at:", output_path)
